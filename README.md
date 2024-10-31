@@ -1,4 +1,4 @@
-# perheen-viikkoaikataulu
+# Perheen viikkoaikataulu
 
 Projektin tarkoitus on tehdä verkko-sovellus, jonka avulla voi luoda perheelle viikkoaikataulun eli lukujärjestyksen.
 Aikataulunäkymä näyttää perheen aikataulun lukujärjestyksen näköisenä kalenterinäkymänä. Järjestelmässä on ylläpitäjiä
