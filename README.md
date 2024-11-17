@@ -17,3 +17,11 @@ ja käyttäjiä.
 - Ylläpitäjä voi poistaa viikkoaikataulun.
 - Ylläpitäjä voi poistaa käyttäjältä pääsyn johonkin viikkoaikatauluun.
 - Ylläpitäjä voi poistaa käyttäjän.
+
+# Tilanne 17.11.2024
+
+- Luotu tietokantarakenne (schema.sql)
+- Luotu moduuleihin jako, toimivat importit ja jonkin verran logiikkaa
+- Luotu raakile-etusivu
+- Luotu aikataulunäkymä (raakile)
+
