@@ -6,8 +6,8 @@ from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
-db = SQLAlchemy(app)
 
+from db import db
 import routes
+
 

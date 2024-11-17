@@ -1,9 +1,18 @@
 <h1>Perheen viikkoaikataulu</h1>
 <p>Tervetuloa viikkoaikataulusovellukseen! Valitse seuraavista toiminnoista:</p>
 <ul>
+    {% if calendars %}
     <li>
-        <a href="/calendar">Avaa aikataulu</a>
+        Olemassa olevat aikataulut:<br>
+        {% for calendar in calendars %}
+        Aikataulu {{ calendar.id }}: {{ calendar.calendarname}} | <a href="/calendar/{{ calendar.id }}">Avaa aikataulu</a><br>
+        {% endfor %}
     </li>
+    {% else %}
+    <li>
+        Sinulla ei ole vielä aikatauluja
+    </li>
+    {% endif %}
     <li>
         <a href="/calendar/create">Tee uusi aikataulu</a>
     </li>
