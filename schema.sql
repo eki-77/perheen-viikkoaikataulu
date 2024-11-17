@@ -28,10 +28,10 @@ CREATE TABLE events (
 CREATE TABLE persons (
     id SERIAL PRIMARY KEY,
     calendar_id INTEGER REFERENCES calendars,
-    name TEXT,
+    name TEXT
 );
 
 CREATE TABLE event_persons (
     event_id INTEGER REFERENCES events,
-    person_id INTEGER REFERENCES persons,
+    person_id INTEGER REFERENCES persons
 );
