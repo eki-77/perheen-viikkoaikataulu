@@ -30,15 +30,17 @@ ja käyttäjiä.
 Kloonaa tämä repositorio omalle koneellesi ja siirry sen juurikansioon. Luo kansioon .env-tiedosto ja määritä sen sisältö seuraavanlaiseksi:
 
 ```
-DATABASE_URL= tietokannan-paikallinen-osoite
-SECRET_KEY= salainen-avain (16 heksadesimaalimerkkiä)
+DATABASE_URL=<tietokannan-paikallinen-osoite>
+SECRET_KEY=<salainen-avain (16 heksadesimaalimerkkiä)>
 ```
 
 Seuraavaksi aktivoi virtuaaliympäristö ja asenna sovelluksen riippuvuudet komennoilla
 
+```
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ pip install -r ./requirements.txt
+```
 
 Määritä vielä tietokannan skeema komennolla
 
