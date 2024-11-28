@@ -9,6 +9,22 @@ def index():
     calendars_id_name = result.fetchall()
     return render_template("index.html", calendars=calendars_id_name)
 
+@app.route("/login",methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        # TODO: check username and password
+        session["username"] = username
+        return redirect("/")
+    
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return redirect("/")
+
 @app.route("/calendar/<int:id>")
 def calendar(id):
     sql = text("SELECT calendarname FROM calendars WHERE id=:id")
@@ -19,4 +35,3 @@ def calendar(id):
     events = result.fetchall()
     return render_template("calendar.html", id=id, name=a, events=events)
     
-
