@@ -17,9 +17,23 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        # TODO: check username and password
-        session["username"] = username
-        return redirect("/")
+        sql = text("SELECT id, password FROM users WHERE username=:username")
+        result = db.session.execute(sql, {"username":username})
+        user = result.fetchone()    
+        if not user:
+            # TODO: invalid username
+            pass
+        else:
+            hash_value = user.password
+            if check_password_hash(hash_value, password):
+                session["username"] = username
+                return redirect("/")
+            else:
+                # TODO: invalid password
+                pass
+                
+
+            
 
 @app.route("/logout")
 def logout():
@@ -34,7 +48,6 @@ def create_user():
         username = request.form["username"]
         password = request.form["password"]
         admin = False
-        # TODO: create username and password
         hash_value = generate_password_hash(password)
         sql = text("INSERT INTO users (username, password, admin) VALUES (:username, :password, :admin)")
         db.session.execute(sql, {"username":username, "password":hash_value, "admin":admin})
