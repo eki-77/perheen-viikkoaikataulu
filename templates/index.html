@@ -1,9 +1,21 @@
 <h1>Perheen viikkoaikataulu</h1>
 <p>Tervetuloa viikkoaikataulusovellukseen! Valitse seuraavista toiminnoista:</p>
 <ul>
+    {% if session.username %}
+    <li>
+        <p>Olet kirjautunut nimellä {{ session.username }}</p>
+    </li>
+    <li>
+        <a href="/logout">Kirjaudu ulos</a>
+    </li>
+    {% else %}
+    <li>
+        <a href="/create_user">Luo tunnus</a>
+    </li>
     <li>
         <a href="/login">Kirjaudu sisään</a>
     </li>
+    {% endif %}
     {% if calendars %}
     <li>
         Olemassa olevat aikataulut:<br>

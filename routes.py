@@ -19,11 +19,22 @@ def login():
         # TODO: check username and password
         session["username"] = username
         return redirect("/")
-    
+
 @app.route("/logout")
 def logout():
     del session["username"]
     return redirect("/")
+
+@app.route("/create_user", methods=["GET", "POST"])
+def create_user():
+    if request.method == "GET":
+        return render_template("create_user.html")
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        # TODO: create username and password
+        #session["username"] = username
+        return redirect("/")
 
 @app.route("/calendar/<int:id>")
 def calendar(id):
