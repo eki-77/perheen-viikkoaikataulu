@@ -2,6 +2,7 @@ from app import app
 from flask import redirect, render_template, request, session
 from db import db
 from sqlalchemy.sql import text
+from werkzeug.security import check_password_hash, generate_password_hash
 
 @app.route("/")
 def index():
@@ -32,8 +33,13 @@ def create_user():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        admin = False
         # TODO: create username and password
-        #session["username"] = username
+        hash_value = generate_password_hash(password)
+        sql = text("INSERT INTO users (username, password, admin) VALUES (:username, :password, :admin)")
+        db.session.execute(sql, {"username":username, "password":hash_value, "admin":admin})
+        db.session.commit()
+        session["username"] = username
         return redirect("/")
 
 @app.route("/calendar/<int:id>")
