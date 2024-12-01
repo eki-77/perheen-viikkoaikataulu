@@ -91,6 +91,7 @@ def create_user():
         db.session.execute(sql, {"username":username, "password":hash_value, "admin":admin})
         db.session.commit()
         session["username"] = username
+        session["csrf_token"] = token_hex(16)
         return redirect("/")
 
 @app.route("/calendar/<int:id>")
