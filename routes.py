@@ -110,6 +110,8 @@ def create_user():
 
 @app.route("/calendar/<int:id>")
 def calendar(id):
+    if has_access(id) == False:
+        return render_template("error.html", message = "Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?")
     sql = text("SELECT calendarname FROM calendars WHERE id=:id")
     result = db.session.execute(sql, {"id":id})
     a = result.fetchone()[0]
