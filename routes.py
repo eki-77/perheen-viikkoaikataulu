@@ -3,6 +3,7 @@ from flask import redirect, render_template, request, session
 from db import db
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
+from secrets import token_hex
 
 def has_access(user, page):
     # TODO: function to check if user is allowed to access page
@@ -43,6 +44,7 @@ def login():
             hash_value = user.password
             if check_password_hash(hash_value, password):
                 session["username"] = username
+                session["csrf_token"] = token_hex(16)
                 return redirect("/")
             else:
                 # TODO: invalid password
