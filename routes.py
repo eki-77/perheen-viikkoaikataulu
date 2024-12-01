@@ -21,8 +21,6 @@ def is_admin():
     #print("admintesti, userin admintieto", user.admin)
     return user.admin
 
-
-
 def create_admin_if_missing():
     sql = text("SELECT 1 FROM users WHERE username=:admin")
     result = db.session.execute(sql, {"admin":"admin"})
@@ -49,6 +47,11 @@ def index():
         return render_template("index.html", calendars=calendars_id_name)
     return render_template("index.html", calendars=[])
 
+@app.route("/error")
+def error(message):
+    return render_template("error.html", message = message)
+
+
 @app.route("/login",methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -60,8 +63,7 @@ def login():
         result = db.session.execute(sql, {"username":username})
         user = result.fetchone()    
         if not user:
-            # TODO: invalid username
-            pass
+            return render_template("error", message = "Käyttäjätunnusta ei löydy.")
         else:
             hash_value = user.password
             if check_password_hash(hash_value, password):
@@ -69,8 +71,8 @@ def login():
                 session["csrf_token"] = token_hex(16)
                 return redirect("/")
             else:
-                # TODO: invalid password
-                pass
+                return render_template("error", message = "Salasana on väärin.")
+                
                 
 @app.route("/logout")
 def logout():
