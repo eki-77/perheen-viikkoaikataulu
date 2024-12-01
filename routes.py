@@ -146,3 +146,29 @@ def calendar_create():
         db.session.execute(sql, {"calendar_id":cal_id, "user_id":user_id})
         db.session.commit()
         return redirect("/")
+
+@app.route("/person/create", methods=["GET", "POST"])
+def person_create():
+    if request.method == "GET":
+        if not session:
+            return render_template("error.html", message = "Kirjaudu ensin sisään.")
+        if not session["cal_id"]:
+            return render_template("error.html", message = "Avaa ensin jokin viikkoaikataulu johon haluat henkilön lisätä.")
+        if has_access(id) == False:
+            return render_template("error.html", message = "Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?")
+        return render_template("person_create.html")
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        person_name = request.form["person_name"]
+        sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
+        result = db.session.execute(sql, {"calendar_id":session["cal_id"], "person_name":person_name})
+        db.session.commit()
+        person_id = result.fetchone()[0]
+        #sql = text("SELECT id FROM users WHERE username=:username")
+        #result = db.session.execute(sql, {"username":session["username"]})
+        #user_id = result.fetchone()[0]
+        #sql = text("INSERT INTO calendar_owners (calendar_id, user_id) VALUES (:calendar_id, :user_id)")
+        #db.session.execute(sql, {"calendar_id":cal_id, "user_id":user_id})
+        #db.session.commit()
+        return redirect("/calendar/" + session["cal_id"])
