@@ -47,9 +47,9 @@ def index():
         return render_template("index.html", calendars=calendars_id_name)
     return render_template("index.html", calendars=[])
 
-@app.route("/error")
-def error(message):
-    return render_template("error.html", message = message)
+#@app.route("/error")
+#def error(message):
+#    return render_template("error.html")
 
 
 @app.route("/login",methods=["GET", "POST"])
@@ -63,7 +63,7 @@ def login():
         result = db.session.execute(sql, {"username":username})
         user = result.fetchone()    
         if not user:
-            return render_template("error", message = "Käyttäjätunnusta ei löydy.")
+            return render_template("error.html", message = "Käyttäjätunnusta ei löydy.")
         else:
             hash_value = user.password
             if check_password_hash(hash_value, password):
@@ -71,7 +71,7 @@ def login():
                 session["csrf_token"] = token_hex(16)
                 return redirect("/")
             else:
-                return render_template("error", message = "Salasana on väärin.")
+                return render_template("error.html", message = "Salasana on väärin.")
                 
                 
 @app.route("/logout")
