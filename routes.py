@@ -47,6 +47,7 @@ def create_admin_if_missing():
 def index():
     create_admin_if_missing()
     if session:
+        session.pop("cal_id", default=None)
         if is_admin():
             result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
         else:
@@ -115,6 +116,7 @@ def calendar(id):
     sql = text("SELECT calendarname FROM calendars WHERE id=:id")
     result = db.session.execute(sql, {"id":id})
     a = result.fetchone()[0]
+    session["cal_id"] = id
     sql = text("SELECT * FROM events WHERE calendar_id=:id")
     result = db.session.execute(sql, {"id":id})
     events = result.fetchall()
