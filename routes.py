@@ -118,3 +118,24 @@ def calendar(id):
     events = result.fetchall()
     return render_template("calendar.html", id=id, name=a, events=events)
     
+@app.route("/calendar/create", methods=["GET", "POST"])
+def calendar_create():
+    if request.method == "GET":
+        if not session:
+            return render_template("error.html", message = "Kirjaudu ensin sisään.")
+        return render_template("calendar_create.html")
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        calendar_name = request.form["calendar_name"]
+        sql = text("INSERT INTO calendars (calendarname) VALUES (:calendar_name) RETURNING id")
+        result = db.session.execute(sql, {"calendar_name":calendar_name})
+        db.session.commit()
+        cal_id = result.fetchone()[0]
+        sql = text("SELECT id FROM users WHERE username=:username")
+        result = db.session.execute(sql, {"username":session["username"]})
+        user_id = result.fetchone()[0]
+        sql = text("INSERT INTO calendar_owners (calendar_id, user_id) VALUES (:calendar_id, :user_id)")
+        db.session.execute(sql, {"calendar_id":cal_id, "user_id":user_id})
+        db.session.commit()
+        return redirect("/")

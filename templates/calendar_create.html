@@ -1,0 +1,8 @@
+<h1>Luo viikkoaikataulu</h1>
+<form action="/calendar/create" method="POST">
+<p>Anna aikataululle nimi:<br>
+<input type="text" name="calendar_name"></p>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<input type="submit" value="Luo aikatalu">
+</form>
+
