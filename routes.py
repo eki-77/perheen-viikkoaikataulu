@@ -5,10 +5,20 @@ from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from secrets import token_hex
 
-def has_access(user, page):
-    # TODO: function to check if user is allowed to access page
-    return True
-
+def has_access(calendar_id):
+    if is_admin():
+        return True
+    if not session:
+        return False
+    username = session["username"]
+    sql = text("SELECT CO.user_id FROM calendar_owners CO, users U WHERE U.username=:username AND U.id = CO.user_id AND CO.calendar_id=:calendar_id")
+    result = db.session.execute(sql, {"username":username, "calendar_id":calendar_id})
+    rights = result.fetchone()
+    if rights:
+        return True
+    else:
+        return False
+    
 def is_admin():
     if not session:
         return False
