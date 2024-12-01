@@ -1,15 +1,15 @@
 <h1>{{name}}</h1>
 <h3>Henkilöt:</h3>
 <p>
-    <a href="/person/create">Lisää uusi henkilö</a><br>
     {%for person in persons %}
-    {{person}}<br>
+    {{person.name}} | 
     {% endfor %}
+    <a href="/person/create">Lisää uusi henkilö</a><br>
 </p>
 <h3>Tapahtumat:</h3>
 <p>
     <a href="/event/create">Lisää uusi tapahtuma</a><br>
     {%for event in events %}
-    {{event}}<br>
+    {{event.eventname}}<br>
     {% endfor %}
 </p>

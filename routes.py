@@ -154,7 +154,7 @@ def person_create():
             return render_template("error.html", message = "Kirjaudu ensin sisään.")
         if not session["cal_id"]:
             return render_template("error.html", message = "Avaa ensin jokin viikkoaikataulu johon haluat henkilön lisätä.")
-        if has_access(id) == False:
+        if has_access(session["cal_id"]) == False:
             return render_template("error.html", message = "Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?")
         return render_template("person_create.html")
     if request.method == "POST":
@@ -171,4 +171,4 @@ def person_create():
         #sql = text("INSERT INTO calendar_owners (calendar_id, user_id) VALUES (:calendar_id, :user_id)")
         #db.session.execute(sql, {"calendar_id":cal_id, "user_id":user_id})
         #db.session.commit()
-        return redirect("/calendar/" + session["cal_id"])
+        return redirect("/calendar/" + str(session["cal_id"]))
