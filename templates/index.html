@@ -3,7 +3,7 @@
 <ul>
     {% if session.username %}
     <li>
-        <p>Olet kirjautunut nimellä {{ session.username }}</p>
+        Olet kirjautunut nimellä {{ session.username }}
     </li>
     <li>
         <a href="/logout">Kirjaudu ulos</a>
@@ -16,9 +16,10 @@
         <a href="/login">Kirjaudu sisään</a>
     </li>
     {% endif %}
+    <p></p>
     {% if calendars %}
     <li>
-        Olemassa olevat aikataulut:<br>
+        Aikataulusi:<br>
         {% for calendar in calendars %}
         Aikataulu {{ calendar.id }}: {{ calendar.calendarname}} | <a href="/calendar/{{ calendar.id }}">Avaa aikataulu</a><br>
         {% endfor %}
