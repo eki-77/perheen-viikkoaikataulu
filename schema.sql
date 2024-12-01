@@ -11,13 +11,13 @@ CREATE TABLE calendars (
 );
 
 CREATE TABLE calendar_owners (
-    calendar_id INTEGER REFERENCES calendars,
-    user_id INTEGER REFERENCES users
+    calendar_id INTEGER REFERENCES calendars ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 
 CREATE TABLE events (
     id SERIAL PRIMARY KEY,
-    calendar_id INTEGER REFERENCES calendars,
+    calendar_id INTEGER REFERENCES calendars ON DELETE CASCADE,
     day INTEGER,
     start_time TIME,
     end_time TIME,
@@ -27,11 +27,12 @@ CREATE TABLE events (
 
 CREATE TABLE persons (
     id SERIAL PRIMARY KEY,
-    calendar_id INTEGER REFERENCES calendars,
+    calendar_id INTEGER REFERENCES calendars ON DELETE CASCADE,
     name TEXT
 );
 
 CREATE TABLE event_persons (
-    event_id INTEGER REFERENCES events,
-    person_id INTEGER REFERENCES persons
+    event_id INTEGER REFERENCES events ON DELETE CASCADE,
+    person_id INTEGER REFERENCES persons ON DELETE CASCADE
 );
+
