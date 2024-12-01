@@ -4,6 +4,22 @@ from db import db
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
+def has_access(user, page):
+    # TODO: function to check if user is allowed to access page
+    return True
+
+def create_admin_if_missing():
+    sql = text("SELECT 1 FROM users WHERE username=:admin")
+    result = db.session.execute(sql, {"admin":"admin"})
+    if not result.fetchone():
+        print("ei adminia!")
+        hash_value = generate_password_hash("tsoha-admin")
+        sql = text("INSERT INTO users (username, password, admin) VALUES (:username, :password, :admin)")
+        db.session.execute(sql, {"username":"admin", "password":hash_value, "admin":True})
+        db.session.commit()
+    else:
+        print("löytyi admin")
+
 @app.route("/")
 def index():
     result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
@@ -32,9 +48,6 @@ def login():
                 # TODO: invalid password
                 pass
                 
-
-            
-
 @app.route("/logout")
 def logout():
     del session["username"]
@@ -42,6 +55,7 @@ def logout():
 
 @app.route("/create_user", methods=["GET", "POST"])
 def create_user():
+    create_admin_if_missing()
     if request.method == "GET":
         return render_template("create_user.html")
     if request.method == "POST":
