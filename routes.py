@@ -9,6 +9,20 @@ def has_access(user, page):
     # TODO: function to check if user is allowed to access page
     return True
 
+def is_admin():
+    if not session:
+        return False
+    print(session)
+    #print(session["username"])
+    #print("admintesti", un)
+    #sql = text("SELECT admin FROM users WHERE username=:username")
+    #result = db.session.execute(sql, {"username":username})
+    #user = result.fetchone()
+    #print("admintesti, userin admintieto", user.admin)
+    #return user.admin
+
+
+
 def create_admin_if_missing():
     sql = text("SELECT 1 FROM users WHERE username=:admin")
     result = db.session.execute(sql, {"admin":"admin"})
@@ -23,17 +37,20 @@ def create_admin_if_missing():
 
 @app.route("/")
 def index():
-    result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
-    calendars_id_name = result.fetchall()
-    return render_template("index.html", calendars=calendars_id_name)
+    if is_admin():
+        result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
+        calendars_id_name = result.fetchall()
+        return render_template("index.html", calendars=calendars_id_name)
+    else:
+        result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
+        calendars_id_name = result.fetchall()
+        return render_template("index.html", calendars=calendars_id_name)
 
 @app.route("/login",methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
     if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
         username = request.form["username"]
         password = request.form["password"]
         sql = text("SELECT id, password FROM users WHERE username=:username")
@@ -55,6 +72,7 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["csrf_token"]
     return redirect("/")
 
 @app.route("/create_user", methods=["GET", "POST"])
@@ -63,8 +81,8 @@ def create_user():
     if request.method == "GET":
         return render_template("create_user.html")
     if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+        #if session["csrf_token"] != request.form["csrf_token"]:
+        #    abort(403)
         username = request.form["username"]
         password = request.form["password"]
         admin = False
