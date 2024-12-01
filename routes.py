@@ -120,7 +120,10 @@ def calendar(id):
     sql = text("SELECT * FROM events WHERE calendar_id=:id")
     result = db.session.execute(sql, {"id":id})
     events = result.fetchall()
-    return render_template("calendar.html", id=id, name=a, events=events)
+    sql = text("SELECT * FROM persons WHERE calendar_id=:id")
+    result = db.session.execute(sql, {"id":id})
+    persons = result.fetchall()
+    return render_template("calendar.html", id=id, name=a, events=events, persons=persons)
     
 @app.route("/calendar/create", methods=["GET", "POST"])
 def calendar_create():
