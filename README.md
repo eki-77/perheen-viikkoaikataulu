@@ -25,6 +25,28 @@ ja käyttäjiä.
 - Luotu raakile-etusivu
 - Luotu aikataulunäkymä (raakile)
 
+# Tilanne 1.12.2024
+
+- Pahasti on kesken vielä!
+- Käyttäjä voi luoda tunnuksen ja kirjautua sisään ja ulos
+- Sovelluksessa on yksi ylläpitotunnus (tunnus: admin, salasana: tsoha-admin), joka luodaan etusivulle tultaessa jos sitä ei ole tietokannassa.
+- Käyttäjä voi luoda viikkoaikataulun.
+- Käyttäjälle näytetään etusivulla ne viikkoaikataulut, joihin hänellä on oikeudet (adminille näytetään kaikki)
+- Käyttäjä voi avata viikkoaikataulun.
+- Viikkoaikataulussa käyttäjä voi luoda aikatauluun liittyviä henkilöitä.
+- Kaikki toiminnot on suojattu sql-injektiolta ja xss- ja csrf-haavoittuvuuksilta.
+- Sovelluksessa on virheilmoitussivu, joka näyttää tarkemman virheen kuvauksen.
+- Viikkoaikatauluihin liittyvillä sivuilla tarkastetaan, onko käyttäjällä oikeuksia nähdä sivua.
+- Eväste pitää tallessa tiedon, mikä viikkoaikataulu on auki (eli mihin luodaan henkilöitä tai tapahtumia).
+- Tietokantarakenne ymmärtää tietojen poistamisen päälle (ON DELETE CASCADE).
+
+- Tapahtumia ei voi vielä luoda, eikä niille ole fiksua näyttötapaa.
+- Viikkoaikatauluun ei voi vielä antaa oikeuksia muille käyttäjille.
+- Mitään lomakkeisiin syötettyjä tietoja ei vielä tarkisteta esim. ylipitkien syötteiden varalta.
+- Ylläpitäjä ei voi vielä tehdä oikein mitään mitä kuvauksessa luvataan, ei edes vaihtaa oletussalasanaa (tulossa).
+
+
+
 # Testausohjeet 
 
 Kloonaa tämä repositorio omalle koneellesi ja siirry sen juurikansioon. Luo kansioon .env-tiedosto ja määritä sen sisältö seuraavanlaiseksi:
