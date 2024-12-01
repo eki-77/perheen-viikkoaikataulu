@@ -37,6 +37,7 @@ def create_admin_if_missing():
 
 @app.route("/")
 def index():
+    create_admin_if_missing()
     if is_admin():
         result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
         calendars_id_name = result.fetchall()
@@ -77,7 +78,6 @@ def logout():
 
 @app.route("/create_user", methods=["GET", "POST"])
 def create_user():
-    create_admin_if_missing()
     if request.method == "GET":
         return render_template("create_user.html")
     if request.method == "POST":
