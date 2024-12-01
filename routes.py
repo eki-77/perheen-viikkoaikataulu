@@ -12,14 +12,14 @@ def has_access(user, page):
 def is_admin():
     if not session:
         return False
-    print(session)
+    #print(session)
     #print(session["username"])
-    #print("admintesti", un)
-    #sql = text("SELECT admin FROM users WHERE username=:username")
-    #result = db.session.execute(sql, {"username":username})
-    #user = result.fetchone()
+    username = session["username"]
+    sql = text("SELECT admin FROM users WHERE username=:username")
+    result = db.session.execute(sql, {"username":username})
+    user = result.fetchone()
     #print("admintesti, userin admintieto", user.admin)
-    #return user.admin
+    return user.admin
 
 
 
@@ -38,14 +38,16 @@ def create_admin_if_missing():
 @app.route("/")
 def index():
     create_admin_if_missing()
-    if is_admin():
-        result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
+    if session:
+        if is_admin():
+            result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
+        else:
+            username = session["username"]
+            sql = text("SELECT C.id, C.calendarname FROM calendars C, calendar_owners CO, users U WHERE U.username=:username AND U.id = CO.user_id AND CO.calendar_id = C.id")
+            result = db.session.execute(sql, {"username":username})
         calendars_id_name = result.fetchall()
         return render_template("index.html", calendars=calendars_id_name)
-    else:
-        result = db.session.execute(text("SELECT id, calendarname FROM calendars"))
-        calendars_id_name = result.fetchall()
-        return render_template("index.html", calendars=calendars_id_name)
+    return render_template("index.html", calendars=[])
 
 @app.route("/login",methods=["GET", "POST"])
 def login():
