@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tyyli.css')}}">
+</head>
+<body>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<title>Perheen viikkoaikataulu - {% block title %}{% endblock %}</title>
+<h1>Perheen viikkoaikataulu</h1>
+<a href="/">Etusivu</a>
+<a href="/login">Kirjautuminen</a>
+<hr>
+{% block content %}{% endblock %}
+<hr>
+Tässä on tällainen footerteksti.
+</body>

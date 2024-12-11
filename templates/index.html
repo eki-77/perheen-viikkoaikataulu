@@ -1,4 +1,8 @@
-<h1>Perheen viikkoaikataulu</h1>
+{% extends "layout.html" %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+
+<!-- <h1>Perheen viikkoaikataulu</h1> -->
 <p>Tervetuloa viikkoaikataulusovellukseen! Valitse seuraavista toiminnoista:</p>
 <ul>
     {% if session.username %}
@@ -39,3 +43,5 @@
     </li>
     
 </ul>
+
+{% endblock %}
