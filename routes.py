@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, flash
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from secrets import token_hex
@@ -38,7 +38,9 @@ def login():
         result = db.session.execute(sql, {"username":username})
         user = result.fetchone()    
         if not user:
-            return render_template("error.html", message = "Käyttäjätunnusta ei löydy.")
+            #return render_template("error.html", message = "Käyttäjätunnusta ei löydy.")
+            flash("Käyttäjätunnusta ei löydy.", 'error')
+            return redirect("/login")
         else:
             hash_value = user.password
             if check_password_hash(hash_value, password):
