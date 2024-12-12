@@ -1,3 +1,8 @@
+{% extends "layout.html" %}
+{% block title %}Lisää henkilö{% endblock %}
+
+{% block content %}
+
 <h1>Lisää henkilö</h1>
 <form action="/person/create" method="POST">
 <p>Anna lisättävän henkilön nimi:<br>
@@ -6,3 +11,4 @@
 <input type="submit" value="Lisää henkilö">
 </form>
 
+{% endblock %}
