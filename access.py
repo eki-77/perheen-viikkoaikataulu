@@ -1,6 +1,7 @@
 from db import db
 from sqlalchemy.sql import text
 from flask import redirect, render_template, request, session
+from werkzeug.security import check_password_hash, generate_password_hash
 
 def has_access(calendar_id):
     if is_admin():
