@@ -53,8 +53,9 @@ def login():
                 
 @app.route("/logout")
 def logout():
-    del session["username"]
-    del session["csrf_token"]
+    session.clear()
+    #del session["username"]
+    #del session["csrf_token"]
     return redirect("/")
 
 @app.route("/create_user", methods=["GET", "POST"])
