@@ -1,3 +1,4 @@
 .env
+.pylintrc
 __pycache__
 venv

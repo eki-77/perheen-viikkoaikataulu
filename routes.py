@@ -169,14 +169,3 @@ def event(id, event_id):
     event = events.get_event(event_id)
     persons = person.get_eventpersons(event_id)
     return render_template("event.html", event=event, cal_id=id, persons=persons, weekday=events.get_weekday(event[2])[1])
-    """
-    sql = text("SELECT calendarname FROM calendars WHERE id=:id")
-    result = db.session.execute(sql, {"id":id})
-    a = result.fetchone()[0]
-    session["cal_id"] = id
-    sql = text("SELECT * FROM events WHERE calendar_id=:id")
-    result = db.session.execute(sql, {"id":id})
-    events = result.fetchall()
-    person_list = person.get_persons(id)
-    return render_template("calendar.html", id=id, name=a, events=events, persons=person_list)
-    """
