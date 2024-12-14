@@ -10,6 +10,3 @@ from db import db
 import routes
 
 
-
-
-#ehkä, tässä alustetaan app ja sitten kutsuttaisin db:n uutta funktiota
