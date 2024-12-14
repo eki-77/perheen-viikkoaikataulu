@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Lisää henkilö{% endblock %}
+
+{% block content %}
+
+<h1>Lisää henkilö</h1>
+<form action="/calendar/{{id}}/person/create" method="POST">
+<p>Anna lisättävän henkilön nimi:<br>
+<input type="text" name="person_name"></p>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<input type="submit" value="Lisää henkilö">
+</form>
+
+{% endblock %}

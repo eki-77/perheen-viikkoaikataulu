@@ -6,6 +6,7 @@ from secrets import token_hex
 from db import db
 from app import app
 from access import has_access, is_admin, create_admin_if_missing
+import person
 import events
 
 @app.route("/")
@@ -88,10 +89,8 @@ def calendar(id):
     sql = text("SELECT * FROM events WHERE calendar_id=:id")
     result = db.session.execute(sql, {"id":id})
     events = result.fetchall()
-    sql = text("SELECT * FROM persons WHERE calendar_id=:id")
-    result = db.session.execute(sql, {"id":id})
-    persons = result.fetchall()
-    return render_template("calendar.html", id=id, name=a, events=events, persons=persons)
+    person_list = person.get_persons(id)
+    return render_template("calendar.html", id=id, name=a, events=events, persons=person_list)
     
 @app.route("/calendar/create", methods=["GET", "POST"])
 def calendar_create():
@@ -140,10 +139,14 @@ def event_create(id):
     if request.method == "GET":
         if not session:
             flash("Kirjaudu ensin sisään.", 'error')
-            return redirect("/calendar/<int:id>")
+            return redirect("/calendar/" + str(id))
         if has_access(id) == False:
             flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
             return redirect("/")
+        person_list = person.get_persons(id)
+        if person_list == []:
+            flash("Aikataulullasi ei ole henkilöitä. Luo ensin henkilöt, joille haluat luoda tapahtumia.", 'error')
+            return redirect("/calendar/" + str(id))
         return render_template("event_create.html", id = id)
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
