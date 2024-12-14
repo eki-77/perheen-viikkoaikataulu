@@ -152,7 +152,13 @@ def event_create(id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
         #Tähän kohtaan lomakkeen loput tarkistukset
+        if request.form["start-time"] >= request.form["end-time"]:
+            flash("Tapahtuman loppumisajan täytyy olla alkamisajan jälkeen.", 'error')
+            return redirect("/calendar/" + str(id) + "/event/create")
         participants = request.form.getlist("participants")
+        if participants == []:
+            flash("Valitse tapahtumalle ainakin yksi osallistuja.", 'error')
+            return redirect("/calendar/" + str(id) + "/event/create")
         result = events.create_event(id, request.form["event_name"], participants, request.form["weekday"], request.form["start-time"], request.form["end-time"], request.form["equipment"])
         #person_name = request.form["person_name"]
         #sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
