@@ -4,7 +4,7 @@
 {% block content %}
 
 <h1>Lisää henkilö</h1>
-<form action="/person/create" method="POST">
+<form action="/calendar/{{id}}/person/create" method="POST">
 <p>Anna lisättävän henkilön nimi:<br>
 <input type="text" name="person_name"></p>
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">

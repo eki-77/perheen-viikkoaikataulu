@@ -22,9 +22,9 @@ def index():
         return render_template("index.html", calendars=calendars_id_name)
     return render_template("index.html", calendars=[])
 
-#@app.route("/error")
-#def error(message):
-#    return render_template("error.html")
+@app.route("/error")
+def error(message):
+    return render_template("error.html")
 
 
 @app.route("/login",methods=["GET", "POST"])
@@ -114,28 +114,26 @@ def calendar_create():
         db.session.commit()
         return redirect("/")
 
-@app.route("/person/create", methods=["GET", "POST"])
-def person_create():
+@app.route("/calendar/<int:id>/person/create", methods=["GET", "POST"])
+def person_create(id):
     if request.method == "GET":
         if not session:
             return render_template("error.html", message = "Kirjaudu ensin sisään.")
-        if not session["cal_id"]:
-            return render_template("error.html", message = "Avaa ensin jokin viikkoaikataulu johon haluat henkilön lisätä.")
-        if has_access(session["cal_id"]) == False:
+        #if not session["cal_id"]:
+        #    return render_template("error.html", message = "Avaa ensin jokin viikkoaikataulu johon haluat henkilön lisätä.")
+        #if has_access(session["cal_id"]) == False:
+        if has_access(id) == False:
             return render_template("error.html", message = "Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?")
-        return render_template("person_create.html")
+        return render_template("person_create.html", id = id)
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
         person_name = request.form["person_name"]
         sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
-        result = db.session.execute(sql, {"calendar_id":session["cal_id"], "person_name":person_name})
+        #result = db.session.execute(sql, {"calendar_id":session["cal_id"], "person_name":person_name})
+        result = db.session.execute(sql, {"calendar_id":id, "person_name":person_name})
         db.session.commit()
         person_id = result.fetchone()[0]
-        #sql = text("SELECT id FROM users WHERE username=:username")
-        #result = db.session.execute(sql, {"username":session["username"]})
-        #user_id = result.fetchone()[0]
-        #sql = text("INSERT INTO calendar_owners (calendar_id, user_id) VALUES (:calendar_id, :user_id)")
-        #db.session.execute(sql, {"calendar_id":cal_id, "user_id":user_id})
-        #db.session.commit()
-        return redirect("/calendar/" + str(session["cal_id"]))
+        #return redirect("/calendar/" + str(session["cal_id"]))
+        return redirect("/calendar/" + str(id))
+

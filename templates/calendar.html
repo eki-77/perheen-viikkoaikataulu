@@ -9,11 +9,11 @@
     {%for person in persons %}
     {{person.name}} | 
     {% endfor %}
-    <a href="/person/create">Lisää uusi henkilö</a><br>
+    <a href="/calendar/{{id}}/person/create">Lisää uusi henkilö</a><br>
 </p>
 <h3>Tapahtumat:</h3>
 <p>
-    <a href="/event/create">Lisää uusi tapahtuma</a><br>
+    <a href="/calendar/{{id}}/event/create">Lisää uusi tapahtuma</a><br>
     {%for event in events %}
     {{event.eventname}}<br>
     {% endfor %}
