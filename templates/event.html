@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}{{event.name}}{% endblock %}
+
+{% block content %}
+
+<h2>Tapahtuma: {{event.eventname}}</h2>
+<p>Osallistujat: 
+    {%for person in persons %}
+    {{person.name}} | 
+    {% endfor %}
+    <br>
+</p>
+<p>
+    {{weekday}} klo {{event.start_time}} - {{event.end_time}}
+</p>
+<p>
+    Mukaan: {{event.items}}
+</p>
+<p>
+    <a href="/calendar/{{cal_id}}">Takaisin aikatauluun</a>
+</p>
+{% endblock %}

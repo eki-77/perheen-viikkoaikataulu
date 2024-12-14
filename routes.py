@@ -151,7 +151,6 @@ def event_create(id):
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
-        #Tähän kohtaan lomakkeen loput tarkistukset
         if request.form["start-time"] >= request.form["end-time"]:
             flash("Tapahtuman loppumisajan täytyy olla alkamisajan jälkeen.", 'error')
             return redirect("/calendar/" + str(id) + "/event/create")
@@ -159,10 +158,25 @@ def event_create(id):
         if participants == []:
             flash("Valitse tapahtumalle ainakin yksi osallistuja.", 'error')
             return redirect("/calendar/" + str(id) + "/event/create")
-        result = events.create_event(id, request.form["event_name"], participants, request.form["weekday"], request.form["start-time"], request.form["end-time"], request.form["equipment"])
-        #person_name = request.form["person_name"]
-        #sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
-        #result = db.session.execute(sql, {"calendar_id":id, "person_name":person_name})
-        #db.session.commit()
-        #person_id = result.fetchone()[0]
+        result = events.create_event(id, request.form["event_name"], participants, request.form["weekday"], request.form["start-time"], request.form["end-time"], request.form["equipment"])        
         return redirect("/calendar/" + str(id))
+
+@app.route("/calendar/<int:id>/event/<int:event_id>")
+def event(id, event_id):
+    if has_access(id) == False:
+        flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
+        return redirect("/")
+    event = events.get_event(event_id)
+    persons = person.get_eventpersons(event_id)
+    return render_template("event.html", event=event, cal_id=id, persons=persons, weekday=events.get_weekday(event[2])[1])
+    """
+    sql = text("SELECT calendarname FROM calendars WHERE id=:id")
+    result = db.session.execute(sql, {"id":id})
+    a = result.fetchone()[0]
+    session["cal_id"] = id
+    sql = text("SELECT * FROM events WHERE calendar_id=:id")
+    result = db.session.execute(sql, {"id":id})
+    events = result.fetchall()
+    person_list = person.get_persons(id)
+    return render_template("calendar.html", id=id, name=a, events=events, persons=person_list)
+    """

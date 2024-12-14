@@ -15,7 +15,7 @@
 <p>
     <a href="/calendar/{{id}}/event/create">Lisää uusi tapahtuma</a><br>
     {%for event in events %}
-    {{event.eventname}}<br>
+    <a href="/calendar/{{id}}/event/{{event.id}}">{{event.eventname}}</a><br>
     {% endfor %}
 </p>
 
