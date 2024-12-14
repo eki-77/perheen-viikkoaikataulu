@@ -11,12 +11,12 @@
 </p>
 <p>Valitse tapahtumaan osallistuvat henkilöt:<br>
     {% for person in persons %}
-    <input type="checkbox" name="answer" value="{{ person.id }}"> {{ person.name }} <br>
+    <input type="checkbox" name="participants" value="{{ person.id }}"> {{ person.name }} <br>
     {% endfor %}
 </p>
 <p>
     Minä päivänä tapahtuma on? Anna viikonpäivän numero (1=ma, 7=su):<br>
-    <input type="number" id="weekday" name="quantity" min="1" max="7" required>
+    <input type="number" id="weekday" name="weekday" min="1" max="7" required>
 </p>
 <p>
     <label for="start-time">Tapahtuman alkamisaika:</label>

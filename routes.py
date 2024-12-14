@@ -151,7 +151,9 @@ def event_create(id):
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
-        
+        #Tähän kohtaan lomakkeen loput tarkistukset
+        participants = request.form.getlist("participants")
+        result = events.create_event(id, request.form["event_name"], participants, request.form["weekday"], request.form["start-time"], request.form["end-time"], request.form["equipment"])
         #person_name = request.form["person_name"]
         #sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
         #result = db.session.execute(sql, {"calendar_id":id, "person_name":person_name})
