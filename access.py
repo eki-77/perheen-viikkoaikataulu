@@ -2,6 +2,7 @@ from db import db
 from sqlalchemy.sql import text
 from flask import redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
+from os import getenv
 
 def has_access(calendar_id):
     if is_admin():
@@ -34,7 +35,8 @@ def create_admin_if_missing():
     result = db.session.execute(sql, {"admin":"admin"})
     if not result.fetchone():
         print("ei adminia!")
-        hash_value = generate_password_hash("tsoha-admin")
+        pw = getenv("ADMIN_PW", default="tsoha-admin")
+        hash_value = generate_password_hash(pw)
         sql = text("INSERT INTO users (username, password, admin) VALUES (:username, :password, :admin)")
         db.session.execute(sql, {"username":"admin", "password":hash_value, "admin":True})
         db.session.commit()

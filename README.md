@@ -45,7 +45,10 @@ ja käyttäjiä.
 - Mitään lomakkeisiin syötettyjä tietoja ei vielä tarkisteta esim. ylipitkien syötteiden varalta.
 - Ylläpitäjä ei voi vielä tehdä oikein mitään mitä kuvauksessa luvataan, ei edes vaihtaa oletussalasanaa (tulossa).
 
+# Lopullinen versio 15.12.2024
 
+- Sovelluksessa on yksi ylläpitotunnus (tunnus: admin), joka luodaan etusivulle tultaessa jos sitä ei ole tietokannassa. 
+- Ylläpitotunnuksen ("admin") salasanan voi määritellä .env-tiedostossa. Jos sitä ei ole määritelty siellä, se on "tsoha-admin".
 
 # Testausohjeet 
 
@@ -54,6 +57,7 @@ Kloonaa tämä repositorio omalle koneellesi ja siirry sen juurikansioon. Luo ka
 ```
 DATABASE_URL=<tietokannan-paikallinen-osoite>
 SECRET_KEY=<salainen-avain (16 heksadesimaalimerkkiä)>
+ADMIN_PW=<admin-tunnuksen salasana>
 ```
 
 Seuraavaksi aktivoi virtuaaliympäristö ja asenna sovelluksen riippuvuudet komennoilla
