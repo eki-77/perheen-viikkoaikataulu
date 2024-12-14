@@ -6,6 +6,7 @@ from secrets import token_hex
 from db import db
 from app import app
 from access import has_access, is_admin, create_admin_if_missing
+import events
 
 @app.route("/")
 def index():
@@ -121,7 +122,6 @@ def person_create(id):
             return render_template("error.html", message = "Kirjaudu ensin sisään.")
         #if not session["cal_id"]:
         #    return render_template("error.html", message = "Avaa ensin jokin viikkoaikataulu johon haluat henkilön lisätä.")
-        #if has_access(session["cal_id"]) == False:
         if has_access(id) == False:
             return render_template("error.html", message = "Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?")
         return render_template("person_create.html", id = id)
@@ -130,10 +130,27 @@ def person_create(id):
             abort(403)
         person_name = request.form["person_name"]
         sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
-        #result = db.session.execute(sql, {"calendar_id":session["cal_id"], "person_name":person_name})
         result = db.session.execute(sql, {"calendar_id":id, "person_name":person_name})
         db.session.commit()
         person_id = result.fetchone()[0]
-        #return redirect("/calendar/" + str(session["cal_id"]))
         return redirect("/calendar/" + str(id))
 
+@app.route("/calendar/<int:id>/event/create", methods=["GET", "POST"])
+def event_create(id):
+    if request.method == "GET":
+        if not session:
+            flash("Kirjaudu ensin sisään.", 'error')
+            return redirect("/calendar/<int:id>")
+        if has_access(id) == False:
+            flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
+            return redirect("/")
+        return render_template("event_create.html", id = id)
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        #person_name = request.form["person_name"]
+        #sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
+        #result = db.session.execute(sql, {"calendar_id":id, "person_name":person_name})
+        #db.session.commit()
+        #person_id = result.fetchone()[0]
+        return redirect("/calendar/" + str(id))
