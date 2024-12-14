@@ -147,10 +147,11 @@ def event_create(id):
         if person_list == []:
             flash("Aikataulullasi ei ole henkilöitä. Luo ensin henkilöt, joille haluat luoda tapahtumia.", 'error')
             return redirect("/calendar/" + str(id))
-        return render_template("event_create.html", id = id)
+        return render_template("event_create.html", id=id, persons=person_list)
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
+        
         #person_name = request.form["person_name"]
         #sql = text("INSERT INTO persons (calendar_id, name) VALUES (:calendar_id, :person_name) RETURNING id")
         #result = db.session.execute(sql, {"calendar_id":id, "person_name":person_name})

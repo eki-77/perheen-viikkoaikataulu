@@ -1,14 +1,37 @@
 {% extends "layout.html" %}
-{% block title %}Lisää henkilö{% endblock %}
+{% block title %}Lisää tapahtuma{% endblock %}
 
 {% block content %}
 
-<h1>Lisää henkilö</h1>
-<form action="/calendar/{{id}}/person/create" method="POST">
-<p>Anna lisättävän henkilön nimi:<br>
-<input type="text" name="person_name"></p>
+<h1>Lisää tapahtuma</h1>
+<form action="/calendar/{{id}}/event/create" method="POST">
+<p>
+    Anna tapahtuman nimi:<br>
+    <input type="text" name="event_name" required>
+</p>
+<p>Valitse tapahtumaan osallistuvat henkilöt:<br>
+    {% for person in persons %}
+    <input type="checkbox" name="answer" value="{{ person.id }}"> {{ person.name }} <br>
+    {% endfor %}
+</p>
+<p>
+    Minä päivänä tapahtuma on? Anna viikonpäivän numero (1=ma, 7=su):<br>
+    <input type="number" id="weekday" name="quantity" min="1" max="7" required>
+</p>
+<p>
+    <label for="start-time">Tapahtuman alkamisaika:</label>
+    <input id="start-time" type="time" name="start-time" min="00:00" max="24:00" required />
+</p>
+<p>
+    <label for="end-time">Tapahtuman loppumisaika:</label>
+    <input id="end-time" type="time" name="end-time" min="00:00" max="24:00" required />
+</p>
+<p>
+    Mukaan tarvittavat tavarat:<br>
+    <textarea id="equipment" name="equipment" rows="4" cols="50" maxlength="160"></textarea>
+</p>
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="submit" value="Lisää henkilö">
+<input type="submit" value="Lisää tapahtuma">
 </form>
 
 {% endblock %}
