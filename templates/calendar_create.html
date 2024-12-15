@@ -10,7 +10,7 @@
 {% endif %}
 <form action="/calendar/create" method="POST">
 <p>Anna aikataululle nimi:<br>
-<input type="text" name="calendar_name" value={{cal.calendarname}} required></p>
+<input type="text" name="calendar_name" value="{{cal.calendarname}}" required></p>
 {% if cal %}
 <input type="hidden" name="calendar_id" value="{{ cal.id }}">
 {% endif %}
