@@ -92,9 +92,10 @@ def calendar(id):
     session["cal_id"] = id
     sql = text("SELECT * FROM events WHERE calendar_id=:id")
     result = db.session.execute(sql, {"id":id})
-    events = result.fetchall()
+    events_list = result.fetchall()
     person_list = person.get_persons(id)
-    return render_template("calendar.html", id=id, name=a, events=events, persons=person_list)
+    weekdays = [events.get_weekday(x)[0] for x in range(1, 8)]
+    return render_template("calendar.html", id=id, name=a, events=events_list, persons=person_list, weekdays=weekdays)
     
 @app.route("/calendar/create", methods=["GET", "POST"])
 def calendar_create():

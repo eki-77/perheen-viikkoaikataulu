@@ -1,9 +1,12 @@
 <!doctype html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tyyli.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tyyli.css')}}">
 </head>
 <body>
+<div class="container">
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ul>
@@ -21,4 +24,5 @@
 {% block content %}{% endblock %}
 <hr>
 Tässä on tällainen footerteksti.
+</div>
 </body>

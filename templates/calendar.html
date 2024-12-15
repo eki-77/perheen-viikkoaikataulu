@@ -11,12 +11,24 @@
     {% endfor %}
     <a href="/calendar/{{id}}/person/create">Lisää uusi henkilö</a><br>
 </p>
-<h3>Tapahtumat:</h3>
-<p>
-    <a href="/calendar/{{id}}/event/create">Lisää uusi tapahtuma</a><br>
-    {%for event in events %}
-    <a href="/calendar/{{id}}/event/{{event.id}}">{{event.eventname}}</a><br>
-    {% endfor %}
-</p>
 
+<h3>Tapahtumat:</h3>
+<div class="row">
+    <!-- create colums for each weekday and store the outer loop index-->
+    {%for weekday in weekdays %}
+    <div class="col-md">
+    <h4 class="viikonpaivaotsikko">{{weekday}}</h4>
+    {% set outer_loop = loop %}
+    {%for event in events %}
+    <!-- iterate through events and show those that have this weekday as day-->
+    {% if event.day == outer_loop.index %}
+    <div class="tapahtuma">
+    <a href="/calendar/{{id}}/event/{{event.id}}">{{event.eventname}}</a><br>
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+<a href="/calendar/{{id}}/event/create">Lisää uusi tapahtuma</a><br>
 {% endblock %}
