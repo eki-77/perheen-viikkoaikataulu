@@ -18,11 +18,24 @@
 {% endwith %}
 <title>Perheen viikkoaikataulu - {% block title %}{% endblock %}</title>
 <h1>Perheen viikkoaikataulu</h1>
-<a href="/">Etusivu</a>
-<a href="/login">Kirjautuminen</a>
+{% if session.username %}
+    <li>
+        Olet kirjautunut nimellä {{ session.username }}
+    </li>
+    <li>
+        <a href="/logout">Kirjaudu ulos</a>
+    </li>
+    {% else %}
+    <li>
+        <a href="/create_user">Luo tunnus</a>
+    </li>
+    <li>
+        <a href="/login">Kirjaudu sisään</a>
+    </li>
+    {% endif %}
 <hr>
 {% block content %}{% endblock %}
 <hr>
-Tässä on tällainen footerteksti.
+<a href="/">Etusivulle</a>
 </div>
 </body>

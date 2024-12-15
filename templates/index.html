@@ -4,21 +4,6 @@
 
 <p>Tervetuloa viikkoaikataulusovellukseen! Valitse seuraavista toiminnoista:</p>
 <ul>
-    {% if session.username %}
-    <li>
-        Olet kirjautunut nimellä {{ session.username }}
-    </li>
-    <li>
-        <a href="/logout">Kirjaudu ulos</a>
-    </li>
-    {% else %}
-    <li>
-        <a href="/create_user">Luo tunnus</a>
-    </li>
-    <li>
-        <a href="/login">Kirjaudu sisään</a>
-    </li>
-    {% endif %}
     <p></p>
     {% if calendars %}
     <li>
