@@ -17,13 +17,14 @@
     <!-- create colums for each weekday and store the outer loop index-->
     {%for weekday in weekdays %}
     <div class="col-md">
-    <h4 class="viikonpaivaotsikko">{{weekday}}</h4>
+    <h5 class="viikonpaivaotsikko">{{weekday}}</h5>
     {% set outer_loop = loop %}
     {%for event in events %}
     <!-- iterate through events and show those that have this weekday as day-->
     {% if event.day == outer_loop.index %}
     <div class="tapahtuma">
     <a href="/calendar/{{id}}/event/{{event.id}}">{{event.eventname}}</a><br>
+    {{event.start_time.strftime('%H:%M')}}-{{event.end_time.strftime('%H:%M')}}
     </div>
     {% endif %}
     {% endfor %}

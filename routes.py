@@ -90,7 +90,7 @@ def calendar(id):
     result = db.session.execute(sql, {"id":id})
     a = result.fetchone()[0]
     session["cal_id"] = id
-    sql = text("SELECT * FROM events WHERE calendar_id=:id")
+    sql = text("SELECT * FROM events WHERE calendar_id=:id ORDER BY day, start_time")
     result = db.session.execute(sql, {"id":id})
     events_list = result.fetchall()
     person_list = person.get_persons(id)
