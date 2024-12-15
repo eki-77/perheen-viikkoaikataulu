@@ -125,7 +125,7 @@ def calendar_create():
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
         # If form returns calendar_id, this is an edit form
-        if request.form["calendar_id"]:
+        if request.form.get("calendar_id"):
             calendars.update_cal(request.form["calendar_id"], request.form["calendar_name"])
             return redirect("/")
         # Otherwise create new calendar
