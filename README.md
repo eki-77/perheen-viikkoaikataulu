@@ -49,6 +49,23 @@ ja käyttäjiä.
 
 - Sovelluksessa on yksi ylläpitotunnus (tunnus: admin), joka luodaan etusivulle tultaessa jos sitä ei ole tietokannassa. 
 - Ylläpitotunnuksen ("admin") salasanan voi määritellä .env-tiedostossa. Jos sitä ei ole määritelty siellä, se on "tsoha-admin".
+- Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
+- Käyttäjä voi luoda oman viikkoaikataulun.
+- Käyttäjä voi luoda viikkoaikataululle perheenjäsenet, joiden aikatauluista on kyse.
+- Käyttäjä voi luoda aikatauluun tapahtumia ja poistaa niitä. (OLI TARKOITUS PYSTYÄ MYÖS MUOKKAAMMAAN, MUTTA TOIMINTO JÄI PUUTTUMAAN)
+- Tapahtumalla on nimi, ajankohta (viikonpäivä ja alkamis- ja loppumisajat), siihen osallistuvat perheenjäsenet ja mukaan tarvittavat tavarat.
+- Esimerkki tapahtumasta: Esikoisen soittotunti, ti 16-16.30, isä ja esikoinen, mukaan: soitin, nuotit, pyöräilykypärät.
+- (Käyttäjä voi valita aikataulunäkymästä, keiden perheenjäsenten menot näytetään. Oletuksena näytetään kaikkien menot.) 
+    - Tätä toimintoa ei saatu toimimaan!
+- Klikkaamalla tapahtumaa aikataulunäkymästä näytetään tapahtuman tarkat tiedot.
+- (Käyttäjä voi antaa toiselle käyttäjälle pääsyn näkemään ja muokkaamaan viikkoaikatauluaan.)
+    - Tätä ei ehditty tuteuttaa.
+- Ylläpitäjä voi tehdä kaikille viikkoaikatauluille samoja asioita kuin käyttäjät itse luomalleen viikkoaikataululle.
+
+- Nämä seuraavat ylläpitäjän toiminnot jäivät toteuttamatta:
+- (Ylläpitäjä voi poistaa viikkoaikataulun.)
+- (Ylläpitäjä voi poistaa käyttäjältä pääsyn johonkin viikkoaikatauluun.)
+- (Ylläpitäjä voi poistaa käyttäjän.)
 
 # Testausohjeet 
 
