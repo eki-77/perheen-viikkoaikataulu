@@ -3,12 +3,23 @@
 
 {% block content %}
 
+{% if cal %}
+<h1>Muokkaa viikkoaikataulua</h1>
+{% else %}
 <h1>Luo viikkoaikataulu</h1>
+{% endif %}
 <form action="/calendar/create" method="POST">
 <p>Anna aikataululle nimi:<br>
-<input type="text" name="calendar_name"></p>
+<input type="text" name="calendar_name" value={{cal.calendarname}} required></p>
+{% if cal %}
+<input type="hidden" name="calendar_id" value="{{ cal.id }}">
+{% endif %}
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+{% if cal %}
+<input type="submit" value="Päivitä aikatalu">
+{% else %}
 <input type="submit" value="Luo aikatalu">
+{% endif %}
 </form>
 
 {% endblock %}

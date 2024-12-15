@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session, flash
+from flask import redirect, render_template, request, session, flash, abort
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from secrets import token_hex
@@ -8,6 +8,7 @@ from app import app
 from access import has_access, is_admin, create_admin_if_missing
 import person
 import events
+import calendars
 
 @app.route("/")
 def index():
@@ -101,6 +102,11 @@ def calendar_create():
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
+        # If form returns calendar_id, this is an edit form
+        if request.form["calendar_id"]:
+            calendars.update_cal(request.form["calendar_id"], request.form["calendar_name"])
+            return redirect("/")
+        # Otherwise create new calendar
         calendar_name = request.form["calendar_name"]
         sql = text("INSERT INTO calendars (calendarname) VALUES (:calendar_name) RETURNING id")
         result = db.session.execute(sql, {"calendar_name":calendar_name})
@@ -113,6 +119,22 @@ def calendar_create():
         db.session.execute(sql, {"calendar_id":cal_id, "user_id":user_id})
         db.session.commit()
         return redirect("/")
+
+@app.route("/calendar/<int:id>/edit")
+def calendar_edit(id):    
+    if not session:
+        flash("Kirjaudu ensin sisään.", 'error')
+        return redirect("/")
+    if has_access(id) == False:
+        flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
+        return redirect("/")
+    cal = calendars.get_calendar(id)
+    if cal == False:
+        flash("Tätä aikataulua ei ole olemassa.", 'error')
+        return redirect("/")
+    # Send calendar information to template to prefill the form and signify this is an edit, not create.
+    return render_template("calendar_create.html", cal = cal)
+    
 
 @app.route("/calendar/<int:id>/person/create", methods=["GET", "POST"])
 def person_create(id):
