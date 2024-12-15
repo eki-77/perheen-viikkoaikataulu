@@ -41,7 +41,6 @@ def login():
         result = db.session.execute(sql, {"username":username})
         user = result.fetchone()    
         if not user:
-            #return render_template("error.html", message = "Käyttäjätunnusta ei löydy.")
             flash("Käyttäjätunnusta ei löydy.", 'error')
             return redirect("/login")
         else:
@@ -51,14 +50,13 @@ def login():
                 session["csrf_token"] = token_hex(16)
                 return redirect("/")
             else:
-                return render_template("error.html", message = "Salasana on väärin.")
+                flash("Salasana on väärin.", 'error')
+                return redirect("/login")
                 
                 
 @app.route("/logout")
 def logout():
     session.clear()
-    #del session["username"]
-    #del session["csrf_token"]
     return redirect("/")
 
 @app.route("/create_user", methods=["GET", "POST"])
@@ -66,8 +64,6 @@ def create_user():
     if request.method == "GET":
         return render_template("create_user.html")
     if request.method == "POST":
-        #if session["csrf_token"] != request.form["csrf_token"]:
-        #    abort(403)
         username = request.form["username"]
         password = request.form["password"]
         admin = False
@@ -81,8 +77,15 @@ def create_user():
 
 @app.route("/calendar/<int:id>")
 def calendar(id):
+    if not session:
+        flash("Kirjaudu ensin sisään.", 'error')
+        return redirect("/")
+    if calendars.get_calendar(id) == False:
+        flash("Aikataulua ei löydy", 'error')
+        return redirect("/")
     if has_access(id) == False:
-        return render_template("error.html", message = "Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?")
+        flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
+        return redirect("/")
     sql = text("SELECT calendarname FROM calendars WHERE id=:id")
     result = db.session.execute(sql, {"id":id})
     a = result.fetchone()[0]
@@ -140,9 +143,11 @@ def calendar_edit(id):
 def person_create(id):
     if request.method == "GET":
         if not session:
-            return render_template("error.html", message = "Kirjaudu ensin sisään.")
-        #if not session["cal_id"]:
-        #    return render_template("error.html", message = "Avaa ensin jokin viikkoaikataulu johon haluat henkilön lisätä.")
+            flash("Kirjaudu ensin sisään.", 'error')
+            return redirect("/")
+        if calendars.get_calendar(id) == False:
+            flash("Aikataulua ei löydy", 'error')
+            return redirect("/")
         if has_access(id) == False:
             return render_template("error.html", message = "Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?")
         return render_template("person_create.html", id = id)
@@ -161,7 +166,10 @@ def event_create(id):
     if request.method == "GET":
         if not session:
             flash("Kirjaudu ensin sisään.", 'error')
-            return redirect("/calendar/" + str(id))
+            return redirect("/")
+        if calendars.get_calendar(id) == False:
+            flash("Aikataulua ei löydy", 'error')
+            return redirect("/")
         if has_access(id) == False:
             flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
             return redirect("/")
@@ -180,14 +188,24 @@ def event_create(id):
         if participants == []:
             flash("Valitse tapahtumalle ainakin yksi osallistuja.", 'error')
             return redirect("/calendar/" + str(id) + "/event/create")
-        result = events.create_event(id, request.form["event_name"], participants, request.form["weekday"], request.form["start-time"], request.form["end-time"], request.form["equipment"])        
+        result = events.create_event(id, request.form["event_name"], participants, request.form["weekday"], request.form["start-time"], request.form["end-time"], request.form["equipment"])
+        # Tähän vielä tsekkaus, onnistuiko tietokantaan kirjoitus.
         return redirect("/calendar/" + str(id))
 
 @app.route("/calendar/<int:id>/event/<int:event_id>")
 def event(id, event_id):
+    if not session:
+        flash("Kirjaudu ensin sisään.", 'error')
+        return redirect("/")
+    if calendars.get_calendar(id) == False:
+        flash("Aikataulua ei löydy", 'error')
+        return redirect("/")
     if has_access(id) == False:
         flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
         return redirect("/")
     event = events.get_event(event_id)
+    if event == False:
+        flash("Tapahtumaa ei löydy", 'error')
+        return redirect("/calendar/" + str(id))
     persons = person.get_eventpersons(event_id)
     return render_template("event.html", event=event, cal_id=id, persons=persons, weekday=events.get_weekday(event[2])[1])
