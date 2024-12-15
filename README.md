@@ -61,11 +61,16 @@ ja käyttäjiä.
 - (Käyttäjä voi antaa toiselle käyttäjälle pääsyn näkemään ja muokkaamaan viikkoaikatauluaan.)
     - Tätä ei ehditty tuteuttaa.
 - Ylläpitäjä voi tehdä kaikille viikkoaikatauluille samoja asioita kuin käyttäjät itse luomalleen viikkoaikataululle.
+- Sovelluksen koodipohjaa on muutettu välipalautuspalautteen perusteella, uutta koodia on tehty apufunktioina eri moduleihin.
+- Vanhaa koodia ei kuitenkaan ehditty kokonaan siirtää apufunktioihin, joten routes.py hoitaa ensin tehdyissä sovelluksen osissa myös tietokantatoiminnot.
+- Ohjelma on ruma kuin mikä, ulkoasutoiminnoilla muokattiin lähinnä aikataulunäkymää.
 
 - Nämä seuraavat ylläpitäjän toiminnot jäivät toteuttamatta:
 - (Ylläpitäjä voi poistaa viikkoaikataulun.)
 - (Ylläpitäjä voi poistaa käyttäjältä pääsyn johonkin viikkoaikatauluun.)
 - (Ylläpitäjä voi poistaa käyttäjän.)
+
+
 
 # Testausohjeet 
 
