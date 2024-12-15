@@ -22,3 +22,8 @@ h1 {
     margin-bottom: 10px;
     padding: 10px;
 }
+
+.tapahtuma a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

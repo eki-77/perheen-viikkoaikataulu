@@ -33,4 +33,9 @@ def get_weekday(day):
         return [days[day], on_days[day]]
     else:
         return []
-    
+
+def delete_event(id):
+    sql = text("DELETE FROM events WHERE id=:id")
+    result = db.session.execute(sql, {"id":id})
+    db.session.commit()
+    return result

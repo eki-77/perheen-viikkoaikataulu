@@ -75,27 +75,45 @@ def create_user():
         session["csrf_token"] = token_hex(16)
         return redirect("/")
 
-@app.route("/calendar/<int:id>")
+@app.route("/calendar/<int:id>", methods=["GET", "POST"])
 def calendar(id):
-    if not session:
-        flash("Kirjaudu ensin sisään.", 'error')
-        return redirect("/")
-    if calendars.get_calendar(id) == False:
-        flash("Aikataulua ei löydy", 'error')
-        return redirect("/")
-    if has_access(id) == False:
-        flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
-        return redirect("/")
-    sql = text("SELECT calendarname FROM calendars WHERE id=:id")
-    result = db.session.execute(sql, {"id":id})
-    a = result.fetchone()[0]
-    session["cal_id"] = id
-    sql = text("SELECT * FROM events WHERE calendar_id=:id ORDER BY day, start_time")
-    result = db.session.execute(sql, {"id":id})
-    events_list = result.fetchall()
-    person_list = person.get_persons(id)
-    weekdays = [events.get_weekday(x)[0] for x in range(1, 8)]
-    return render_template("calendar.html", id=id, name=a, events=events_list, persons=person_list, weekdays=weekdays)
+    if request.method == "GET":
+        if not session:
+            flash("Kirjaudu ensin sisään.", 'error')
+            return redirect("/")
+        if calendars.get_calendar(id) == False:
+            flash("Aikataulua ei löydy", 'error')
+            return redirect("/")
+        if has_access(id) == False:
+            flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
+            return redirect("/")
+        persons_active = session.get("show_persons", default=None)
+        if persons_active != None:
+            persons_active = persons_active.get(str(id), None)
+        sql = text("SELECT calendarname FROM calendars WHERE id=:id")
+        result = db.session.execute(sql, {"id":id})
+        a = result.fetchone()[0]
+        session["cal_id"] = id
+        # I could not get filtering by persons to work in time, so this will always select all events on calendar
+        sql = text("SELECT * FROM events WHERE calendar_id=:id ORDER BY day, start_time")
+        result = db.session.execute(sql, {"id":id})
+        events_list = result.fetchall()
+        print(events_list)
+        person_list = person.get_persons(id)
+        weekdays = [events.get_weekday(x)[0] for x in range(1, 8)]
+        return render_template("calendar.html", id=id, name=a, events=events_list, persons=person_list, weekdays=weekdays, persons_active = persons_active)
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        participants = request.form.getlist("participants")
+        print(participants)
+        if session.get("show_persons", default=None) == None:
+            session["show_persons"] = {}
+        session["show_persons"][str(id)] = participants
+        session.modified = True
+        print(session["show_persons"])
+        return redirect("/calendar/" + str(id))
+
     
 @app.route("/calendar/create", methods=["GET", "POST"])
 def calendar_create():
@@ -210,3 +228,22 @@ def event(id, event_id):
         return redirect("/calendar/" + str(id))
     persons = person.get_eventpersons(event_id)
     return render_template("event.html", event=event, cal_id=id, persons=persons, weekday=events.get_weekday(event[2])[1])
+
+@app.route("/calendar/<int:id>/event/<int:event_id>/delete")
+def delete_event(id, event_id):
+    if not session:
+        flash("Kirjaudu ensin sisään.", 'error')
+        return redirect("/")
+    if calendars.get_calendar(id) == False:
+        flash("Aikataulua ei löydy", 'error')
+        return redirect("/")
+    if has_access(id) == False:
+        flash("Sinulla ei ole oikeuksia katsoa tätä sivua. Oletko varmasti kirjautuneena sisään?", 'error')
+        return redirect("/")
+    event = events.get_event(event_id)
+    if event == False:
+        flash("Tapahtumaa ei löydy", 'error')
+        return redirect("/calendar/" + str(id))
+    events.delete_event(event_id)
+    return redirect("/calendar/" + str(id))
+

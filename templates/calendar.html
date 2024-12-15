@@ -6,10 +6,18 @@
 <h1>{{name}}</h1>
 <h3>Henkilöt:</h3>
 <p>
+    <form action="/calendar/{{id}}" method="POST">
     {%for person in persons %}
-    {{person.name}} | 
+    {% if persons_active %}
+    | <input type="checkbox" name="participants" value="{{ person.id }}" {% if person.id|string in persons_active %} checked {% endif %}> {{ person.name }}
+    {% else %}
+    | <input type="checkbox" name="participants" value="{{ person.id }}" checked> {{ person.name }}
+    {% endif %}
     {% endfor %}
-    <a href="/calendar/{{id}}/person/create">Lisää uusi henkilö</a><br>
+    | <a href="/calendar/{{id}}/person/create">Lisää uusi henkilö</a><br>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="submit" value="Päivitä näkymä">
+    </form>
 </p>
 
 <h3>Tapahtumat:</h3>

@@ -7,7 +7,7 @@
 <form action="/calendar/{{id}}/event/create" method="POST">
 <p>
     Anna tapahtuman nimi:<br>
-    <input type="text" name="event_name" required>
+    <input type="text" name="event_name" maxlength="25" required>
 </p>
 <p>Valitse tapahtumaan osallistuvat henkilöt:<br>
     {% for person in persons %}
@@ -27,7 +27,7 @@
     <input id="end-time" type="time" name="end-time" min="00:00" max="24:00" required />
 </p>
 <p>
-    Mukaan tarvittavat tavarat:<br>
+    Mukaan tarvittavat tavarat sekä lisätiedot:<br>
     <textarea id="equipment" name="equipment" rows="4" cols="50" maxlength="160"></textarea>
 </p>
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
