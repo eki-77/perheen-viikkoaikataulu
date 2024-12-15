@@ -26,7 +26,7 @@
         <ul>
         {% for calendar in calendars %}
         <li>
-            <strong>{{ calendar.calendarname}}</strong> | <a href="/calendar/{{ calendar.id }}">Avaa aikataulu</a><br> 
+            <strong><a href="/calendar/{{ calendar.id }}">{{ calendar.calendarname}}</a></strong> | <a href="/calendar/{{ calendar.id }}/edit">muokkaa</a><br> 
         </li>
         {% endfor %}
         </ul>
